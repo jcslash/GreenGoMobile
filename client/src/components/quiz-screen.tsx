@@ -106,7 +106,7 @@ export function QuizScreen() {
           <h1 className="text-xl font-bold">永續知識問答</h1>
           <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
             <Leaf className="w-4 h-4" />
-            <span className="font-semibold">{user?.points || 0}</span>
+            <span className="font-semibold">{user?.totalPoints || 0}</span>
           </div>
         </div>
       </div>

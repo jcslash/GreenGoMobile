@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Leaf, QrCode, X, TreePine, Sparkles } from "lucide-react";
 import { QRCodeScanner } from "@/components/qr-scanner";
 import { SuccessToast } from "@/components/success-toast";
+import { SustainableIsland } from "@/components/sustainable-island";
 import { userKeys, dailyTipKeys } from "@/lib/queryKeys";
 import type { User, DailyTip } from "@shared/schema";
 
@@ -70,39 +71,9 @@ export default function Home() {
             </div>
             
             <div className="text-center relative z-10">
-              {/* Island SVG */}
+              {/* Dynamic Sustainable Island */}
               <div className="mb-6">
-                <svg
-                  width="120"
-                  height="120"
-                  viewBox="0 0 120 120"
-                  className="mx-auto drop-shadow-md"
-                >
-                  {/* Island base */}
-                  <ellipse cx="60" cy="100" rx="45" ry="15" fill="#8B5CF6" opacity="0.2" />
-                  <ellipse cx="60" cy="95" rx="50" ry="20" fill="#10B981" />
-                  
-                  {/* Trees */}
-                  <circle cx="45" cy="85" r="8" fill="#059669" />
-                  <rect x="43" y="85" width="4" height="12" fill="#92400E" />
-                  
-                  <circle cx="75" cy="80" r="10" fill="#047857" />
-                  <rect x="73" y="80" width="4" height="15" fill="#92400E" />
-                  
-                  <circle cx="60" cy="75" r="12" fill="#065F46" />
-                  <rect x="58" y="75" width="4" height="18" fill="#92400E" />
-                  
-                  {/* Small bushes */}
-                  <circle cx="35" cy="90" r="4" fill="#10B981" />
-                  <circle cx="85" cy="88" r="5" fill="#10B981" />
-                  
-                  {/* Sparkles */}
-                  <g fill="#FCD34D">
-                    <circle cx="25" cy="70" r="1.5" />
-                    <circle cx="95" cy="65" r="1" />
-                    <circle cx="40" cy="60" r="1" />
-                  </g>
-                </svg>
+                <SustainableIsland level={user.level} />
               </div>
               
               <h2 className="text-xl font-bold text-gray-800 mb-2">
