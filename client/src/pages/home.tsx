@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Leaf, QrCode, X, TreePine, Sparkles } from "lucide-react";
 import { QRCodeScanner } from "@/components/qr-scanner";
 import { SuccessToast } from "@/components/success-toast";
@@ -8,6 +9,7 @@ import type { User, DailyTip } from "@shared/schema";
 export default function Home() {
   const [isScanning, setIsScanning] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [, setLocation] = useLocation();
 
   const { data: user } = useQuery<User>({
     queryKey: ["/api/user/current"],
@@ -33,10 +35,11 @@ export default function Home() {
     setIsScanning(false);
     setShowSuccess(true);
     
-    // Auto-hide success message after 4 seconds
+    // Auto-hide success message and navigate to quiz after 3 seconds
     setTimeout(() => {
       setShowSuccess(false);
-    }, 4000);
+      setLocation("/quiz-screen");
+    }, 3000);
   };
 
   const getCurrentGreeting = () => {
