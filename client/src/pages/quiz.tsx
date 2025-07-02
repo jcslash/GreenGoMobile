@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Zap, Droplets, Sun, Recycle, Check, Lock } from "lucide-react";
 import { QuizCard } from "@/components/quiz/quiz-card";
 import { QuizQuestion } from "@/components/quiz/quiz-question";
 import { useQuiz } from "@/hooks/use-quiz";
+import { useQuizContext } from "@/contexts/QuizContext";
 import type { User, QuizCategory, UserProgress } from "@shared/schema";
 
 const getCategoryIcon = (icon: string) => {
@@ -37,6 +39,12 @@ export default function Quiz() {
   });
 
   const { 
+    shouldStartDailyChallenge, 
+    setShouldStartDailyChallenge, 
+    dailyChallengeCategoryId 
+  } = useQuizContext();
+
+  const { 
     currentQuestion, 
     isQuizActive, 
     score, 
@@ -46,6 +54,16 @@ export default function Quiz() {
     submitAnswer, 
     endQuiz 
   } = useQuiz();
+
+  // 處理每日挑戰的自動啟動
+  useEffect(() => {
+    if (shouldStartDailyChallenge && user && categories.length > 0) {
+      // 自動開始每日挑戰測驗
+      startQuiz(dailyChallengeCategoryId);
+      // 重置狀態，避免重複觸發
+      setShouldStartDailyChallenge(false);
+    }
+  }, [shouldStartDailyChallenge, user, categories, dailyChallengeCategoryId, startQuiz, setShouldStartDailyChallenge]);
 
   if (!user) {
     return (

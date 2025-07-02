@@ -1,5 +1,6 @@
-import { useEffect } from "react";
-import { CheckCircle, X, Leaf } from "lucide-react";
+import { CheckCircle, X, Leaf, ArrowRight } from "lucide-react";
+import { useLocation } from "wouter";
+import { useQuizContext } from "@/contexts/QuizContext";
 
 interface SuccessToastProps {
   show: boolean;
@@ -7,16 +8,20 @@ interface SuccessToastProps {
 }
 
 export function SuccessToast({ show, onClose }: SuccessToastProps) {
-  useEffect(() => {
-    if (show) {
-      // Auto-close after 4 seconds
-      const timer = setTimeout(() => {
-        onClose();
-      }, 4000);
+  const [, setLocation] = useLocation();
+  const { setShouldStartDailyChallenge, setDailyChallengeCategoryId } = useQuizContext();
 
-      return () => clearTimeout(timer);
-    }
-  }, [show, onClose]);
+  const handleStartQuiz = () => {
+    // 設定每日挑戰狀態
+    setShouldStartDailyChallenge(true);
+    setDailyChallengeCategoryId(1); // 水資源保護類別
+    
+    // 關閉 Modal
+    onClose();
+    
+    // 導航到測驗頁面
+    setLocation("/quiz");
+  };
 
   if (!show) return null;
 
@@ -60,18 +65,19 @@ export function SuccessToast({ show, onClose }: SuccessToastProps) {
         </div>
 
         {/* Action buttons */}
-        <div className="mt-6 space-y-2">
+        <div className="mt-6 space-y-3">
           <button
-            onClick={onClose}
-            className="w-full bg-[hsl(var(--primary-500))] text-white font-semibold py-3 px-4 rounded-xl hover:bg-[hsl(var(--primary-600))] transition-colors"
+            onClick={handleStartQuiz}
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
           >
-            太棒了！
+            <span>開始永續問答</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
           <button
             onClick={onClose}
-            className="w-full text-gray-600 font-medium py-2 px-4 hover:text-gray-800 transition-colors text-sm"
+            className="w-full text-gray-500 font-medium py-2 px-4 hover:text-gray-700 transition-colors text-sm border border-gray-200 rounded-xl hover:bg-gray-50"
           >
-            稍後再說
+            關閉
           </button>
         </div>
       </div>
