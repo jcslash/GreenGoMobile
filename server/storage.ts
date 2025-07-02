@@ -113,7 +113,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserProgress(userId: number): Promise<UserProgress[]> {
-    return await db.select().from(userProgress).where(eq(userProgress.userId, userId));
+    try {
+      const result = await db.select().from(userProgress).where(eq(userProgress.userId, userId));
+      return result || [];
+    } catch (error) {
+      console.error("Error in getUserProgress:", error);
+      return [];
+    }
   }
 
   async getUserProgressByCategory(userId: number, categoryId: number): Promise<UserProgress | undefined> {

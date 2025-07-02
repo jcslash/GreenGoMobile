@@ -49,7 +49,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const questions = await storage.getRandomQuestions(categoryId, limit);
       res.json(questions);
     } catch (error) {
+      console.error("Error getting quiz questions:", error);
       res.status(500).json({ message: "Failed to get quiz questions" });
+    }
+  });
+
+  // Fallback route for generic quiz questions request
+  app.get("/api/quiz/questions", async (req, res) => {
+    try {
+      const categoryId = parseInt(req.query.categoryId as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const questions = await storage.getRandomQuestions(categoryId, limit);
+      res.json(questions);
+    } catch (error) {
+      console.error("Error getting quiz questions:", error);
+      res.json([]);
     }
   });
 

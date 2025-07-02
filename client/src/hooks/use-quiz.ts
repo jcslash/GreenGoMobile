@@ -11,7 +11,7 @@ export function useQuiz() {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
 
   const { data: quizQuestions = [] } = useQuery<QuizQuestion[]>({
-    queryKey: ["/api/quiz/questions", currentCategoryId],
+    queryKey: [`/api/quiz/questions/${currentCategoryId}`],
     enabled: !!currentCategoryId && isQuizActive,
   });
 

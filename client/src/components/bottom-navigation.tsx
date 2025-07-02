@@ -18,8 +18,8 @@ export function BottomNavigation() {
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location === path;
           return (
-            <Link key={path} href={path}>
-              <div className={`flex-1 py-3 px-2 text-center transition-all duration-200 ${
+            <Link key={path} href={path} className="flex-1">
+              <div className={`w-full py-3 px-2 text-center transition-all duration-200 ${
                 isActive 
                   ? "text-[hsl(var(--primary-500))]" 
                   : "text-gray-600 hover:bg-gray-50"
