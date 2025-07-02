@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { User as UserIcon, LogOut, Leaf, Brain, Award, Droplets } from "lucide-react";
+import { userKeys } from "@/lib/queryKeys";
 import type { User } from "@shared/schema";
 
 export default function Profile() {
   const { data: user } = useQuery<User>({
-    queryKey: ["/api/user/current"],
+    queryKey: userKeys.current(),
   });
 
   // Hardcoded statistics as requested for MVP

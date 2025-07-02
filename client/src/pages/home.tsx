@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Leaf, QrCode, X, TreePine, Sparkles } from "lucide-react";
 import { QRCodeScanner } from "@/components/qr-scanner";
 import { SuccessToast } from "@/components/success-toast";
+import { userKeys, dailyTipKeys } from "@/lib/queryKeys";
 import type { User, DailyTip } from "@shared/schema";
 
 export default function Home() {
@@ -10,11 +11,11 @@ export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { data: user } = useQuery<User>({
-    queryKey: ["/api/user/current"],
+    queryKey: userKeys.current(),
   });
 
   const { data: dailyTip } = useQuery<DailyTip>({
-    queryKey: ["/api/daily-tip"],
+    queryKey: dailyTipKeys.current(),
   });
 
   if (!user) {

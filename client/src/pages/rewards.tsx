@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Coins, Leaf, X, Check } from "lucide-react";
+import { userKeys } from "@/lib/queryKeys";
 import type { User } from "@shared/schema";
 
 // Hardcoded rewards data as requested
@@ -55,7 +56,7 @@ export default function Rewards() {
   const [showSuccess, setShowSuccess] = useState(false);
   
   const { data: user } = useQuery<User>({
-    queryKey: ["/api/user/current"],
+    queryKey: userKeys.current(),
   });
 
   const handleRewardClick = (reward: typeof rewardsData[0]) => {

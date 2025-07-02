@@ -5,6 +5,7 @@ import { QuizCard } from "@/components/quiz/quiz-card";
 import { QuizQuestion } from "@/components/quiz/quiz-question";
 import { useQuiz } from "@/hooks/use-quiz";
 import { useQuizContext } from "@/contexts/QuizContext";
+import { userKeys, quizKeys, progressKeys } from "@/lib/queryKeys";
 import type { User, QuizCategory, UserProgress } from "@shared/schema";
 
 const getCategoryIcon = (icon: string) => {
@@ -27,15 +28,15 @@ const getCategoryColor = (color: string) => {
 
 export default function Quiz() {
   const { data: user } = useQuery<User>({
-    queryKey: ["/api/user/current"],
+    queryKey: userKeys.current(),
   });
 
   const { data: categories = [] } = useQuery<QuizCategory[]>({
-    queryKey: ["/api/quiz/categories"],
+    queryKey: quizKeys.categories(),
   });
 
   const { data: userProgress = [] } = useQuery<UserProgress[]>({
-    queryKey: ["/api/progress/current"],
+    queryKey: progressKeys.current(),
   });
 
   const { 

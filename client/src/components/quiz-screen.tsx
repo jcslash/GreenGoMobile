@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, XCircle, Leaf, ArrowRight } from "lucide-react";
+import { userKeys } from "@/lib/queryKeys";
+import type { User } from "@shared/schema";
 
 interface QuizQuestion {
   id: number;
@@ -60,8 +63,12 @@ export function QuizScreen() {
   );
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [greenLeaves, setGreenLeaves] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
+
+  // 使用集中式查詢獲取使用者資料，確保與其他頁面同步
+  const { data: user } = useQuery<User>({
+    queryKey: userKeys.current(),
+  });
 
   const handleAnswerSelect = (answer: string) => {
     if (isAnswered) return;
@@ -69,11 +76,6 @@ export function QuizScreen() {
     setSelectedAnswer(answer);
     setIsAnswered(true);
     setShowExplanation(true);
-    
-    // Add green leaves if correct
-    if (answer === currentQuestion.correctAnswer) {
-      setGreenLeaves(prev => prev + 20);
-    }
   };
 
   const handleNextQuestion = () => {
@@ -104,7 +106,7 @@ export function QuizScreen() {
           <h1 className="text-xl font-bold">永續知識問答</h1>
           <div className="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
             <Leaf className="w-4 h-4" />
-            <span className="font-semibold">{greenLeaves}</span>
+            <span className="font-semibold">{user?.points || 0}</span>
           </div>
         </div>
       </div>

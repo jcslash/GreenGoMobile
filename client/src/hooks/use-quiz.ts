@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { quizKeys, userKeys, progressKeys } from "@/lib/queryKeys";
 import type { QuizQuestion } from "@shared/schema";
 
 export function useQuiz() {
@@ -11,7 +12,7 @@ export function useQuiz() {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
 
   const { data: quizQuestions = [] } = useQuery<QuizQuestion[]>({
-    queryKey: [`/api/quiz/questions/${currentCategoryId}`],
+    queryKey: currentCategoryId ? quizKeys.questions(currentCategoryId) : [],
     enabled: !!currentCategoryId && isQuizActive,
   });
 
@@ -27,8 +28,13 @@ export function useQuiz() {
       if (data.correct) {
         setScore(prev => prev + data.points);
       }
-      // Invalidate user data to update points
-      queryClient.invalidateQueries({ queryKey: ["/api/user/current"] });
+      // 失效使用者相關快取，確保點數更新在所有頁面同步
+      queryClient.invalidateQueries({ queryKey: userKeys.current() });
+      queryClient.invalidateQueries({ queryKey: userKeys.all() });
+      
+      // 失效進度相關快取
+      queryClient.invalidateQueries({ queryKey: progressKeys.current() });
+      queryClient.invalidateQueries({ queryKey: progressKeys.all() });
     },
   });
 
