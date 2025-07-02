@@ -4,6 +4,20 @@ import { storage } from "./storage";
 import { insertQuizAnswerSchema, insertRedeemRewardSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Get current user (default user for demo) - Must come before the parameterized route
+  app.get("/api/user/current", async (req, res) => {
+    try {
+      const user = await storage.getUser(1); // Default user
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error("Error getting current user:", error);
+      res.status(500).json({ message: "Failed to get current user" });
+    }
+  });
+
   // User routes
   app.get("/api/user/:id", async (req, res) => {
     try {
@@ -15,19 +29,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch (error) {
       res.status(500).json({ message: "Failed to get user" });
-    }
-  });
-
-  // Get current user (default user for demo)
-  app.get("/api/user/current", async (req, res) => {
-    try {
-      const user = await storage.getUser(1); // Default user
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json(user);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to get current user" });
     }
   });
 

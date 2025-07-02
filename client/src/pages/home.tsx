@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Leaf, Lightbulb, Brain, Trophy, Check, Award } from "lucide-react";
-import { Link } from "wouter";
+import { Leaf, QrCode, X, TreePine, Sparkles } from "lucide-react";
+import { QRCodeScanner } from "@/components/qr-scanner";
+import { SuccessToast } from "@/components/success-toast";
 import type { User, DailyTip } from "@shared/schema";
 
 export default function Home() {
+  const [isScanning, setIsScanning] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const { data: user } = useQuery<User>({
     queryKey: ["/api/user/current"],
   });
@@ -23,117 +28,180 @@ export default function Home() {
     );
   }
 
-  const weeklyProgress = 75; // Mock weekly progress
-  const completedDays = 5;
-  const totalDays = 7;
+  const handleQRCodeScan = (data: string) => {
+    console.log("QR Code scanned:", data);
+    setIsScanning(false);
+    setShowSuccess(true);
+    
+    // Auto-hide success message after 4 seconds
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
+  };
+
+  const getCurrentGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 6) return "深夜好";
+    if (hour < 12) return "早安";
+    if (hour < 18) return "午安";
+    return "晚安";
+  };
 
   return (
-    <div className="fade-in">
-      {/* Header */}
-      <div className="bg-[hsl(var(--primary-500))] px-4 pt-6 pb-8 text-white">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold">哈囉，{user.displayName}！</h1>
-            <p className="text-[hsl(var(--primary-100))] text-sm">今天也要為地球努力喔 🌱</p>
-          </div>
-          <div className="bg-[hsl(var(--primary-600))] rounded-full p-3">
-            <Leaf className="w-6 h-6" />
+    <>
+      <div className="fade-in min-h-screen bg-gradient-to-b from-green-50 to-blue-50">
+        {/* Welcome Header */}
+        <div className="bg-[hsl(var(--primary-500))] px-4 pt-6 pb-6 text-white">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-2">
+              {getCurrentGreeting()}，永續旅人！
+            </h1>
+            <p className="text-[hsl(var(--primary-100))] text-sm">
+              今天也要為地球盡一份心力 🌱
+            </p>
           </div>
         </div>
-        
-        {/* Progress Card */}
-        <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">本週學習進度</span>
-            <span className="text-xs bg-[hsl(var(--accent-500))] text-white px-2 py-1 rounded-full">
-              {weeklyProgress}%
-            </span>
-          </div>
-          <div className="bg-white/20 rounded-full h-2 mb-2">
-            <div 
-              className="bg-[hsl(var(--accent-500))] h-2 rounded-full transition-all duration-300" 
-              style={{ width: `${weeklyProgress}%` }}
-            />
-          </div>
-          <p className="text-xs text-[hsl(var(--primary-100))]">
-            {completedDays}/{totalDays} 天完成每日任務
-          </p>
-        </div>
-      </div>
 
-      {/* Content Cards */}
-      <div className="px-4 py-6 space-y-6">
-        {/* Today's Tip */}
+        {/* Sustainable Island */}
+        <div className="px-4 py-8">
+          <div className="bg-gradient-to-br from-emerald-100 via-green-50 to-blue-100 rounded-3xl p-8 shadow-lg border border-green-200 relative overflow-hidden">
+            {/* Background decorative elements */}
+            <div className="absolute top-2 right-2 opacity-20">
+              <Sparkles className="w-8 h-8 text-green-600" />
+            </div>
+            <div className="absolute bottom-2 left-2 opacity-10">
+              <TreePine className="w-12 h-12 text-green-700" />
+            </div>
+            
+            <div className="text-center relative z-10">
+              {/* Island SVG */}
+              <div className="mb-6">
+                <svg
+                  width="120"
+                  height="120"
+                  viewBox="0 0 120 120"
+                  className="mx-auto drop-shadow-md"
+                >
+                  {/* Island base */}
+                  <ellipse cx="60" cy="100" rx="45" ry="15" fill="#8B5CF6" opacity="0.2" />
+                  <ellipse cx="60" cy="95" rx="50" ry="20" fill="#10B981" />
+                  
+                  {/* Trees */}
+                  <circle cx="45" cy="85" r="8" fill="#059669" />
+                  <rect x="43" y="85" width="4" height="12" fill="#92400E" />
+                  
+                  <circle cx="75" cy="80" r="10" fill="#047857" />
+                  <rect x="73" y="80" width="4" height="15" fill="#92400E" />
+                  
+                  <circle cx="60" cy="75" r="12" fill="#065F46" />
+                  <rect x="58" y="75" width="4" height="18" fill="#92400E" />
+                  
+                  {/* Small bushes */}
+                  <circle cx="35" cy="90" r="4" fill="#10B981" />
+                  <circle cx="85" cy="88" r="5" fill="#10B981" />
+                  
+                  {/* Sparkles */}
+                  <g fill="#FCD34D">
+                    <circle cx="25" cy="70" r="1.5" />
+                    <circle cx="95" cy="65" r="1" />
+                    <circle cx="40" cy="60" r="1" />
+                  </g>
+                </svg>
+              </div>
+              
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                你的永續島嶼
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                透過環保行動讓小島更加繁茂
+              </p>
+              
+              {/* Green Leaf Points */}
+              <div className="bg-white/60 backdrop-blur rounded-2xl py-3 px-6 inline-flex items-center gap-2 shadow-sm">
+                <Leaf className="w-5 h-5 text-green-600" />
+                <span className="text-lg font-bold text-gray-800">
+                  {user.totalPoints || 150}
+                </span>
+                <span className="text-sm text-gray-600">綠葉</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Daily Tip */}
         {dailyTip && (
-          <div className="bg-gradient-to-r from-[hsl(var(--secondary-50))] to-[hsl(var(--primary-50))] rounded-xl p-4 border border-[hsl(var(--primary-100))]">
-            <div className="flex items-start gap-3">
-              <div className="bg-[hsl(var(--primary-500))] rounded-full p-2 flex-shrink-0">
-                <Lightbulb className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1">{dailyTip.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {dailyTip.content}
-                </p>
-                <button className="text-[hsl(var(--primary-600))] text-sm font-medium mt-2">
-                  了解更多 →
-                </button>
-              </div>
+          <div className="px-4 mb-6">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <h3 className="font-semibold text-gray-900 mb-2 text-center">
+                💡 {dailyTip.title}
+              </h3>
+              <p className="text-sm text-gray-600 text-center leading-relaxed">
+                {dailyTip.content}
+              </p>
             </div>
           </div>
         )}
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4">
-          <Link href="/quiz">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
-              <div className="bg-[hsl(var(--primary-100))] rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <Brain className="w-6 h-6 text-[hsl(var(--primary-600))]" />
-              </div>
-              <h4 className="font-semibold text-gray-900 text-sm">每日測驗</h4>
-              <p className="text-xs text-gray-500 mt-1">3題待完成</p>
+        {/* QR Code Scan Button */}
+        <div className="px-4 pb-8">
+          <button
+            onClick={() => setIsScanning(true)}
+            className="w-full bg-gradient-to-r from-[hsl(var(--primary-500))] to-[hsl(var(--secondary-500))] 
+                     text-white font-bold py-6 px-6 rounded-2xl shadow-lg 
+                     hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200
+                     flex items-center justify-center gap-3"
+          >
+            <QrCode className="w-7 h-7" />
+            <div className="text-center">
+              <div className="text-lg">掃描 QR Code</div>
+              <div className="text-sm opacity-90">完成綠色打卡</div>
             </div>
-          </Link>
-          
-          <Link href="/rewards">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
-              <div className="bg-[hsl(var(--accent-100))] rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <Trophy className="w-6 h-6 text-[hsl(var(--accent-600))]" />
-              </div>
-              <h4 className="font-semibold text-gray-900 text-sm">成就挑戰</h4>
-              <p className="text-xs text-gray-500 mt-1">2個新徽章</p>
-            </div>
-          </Link>
+          </button>
         </div>
+      </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <h3 className="font-semibold text-gray-900 mb-4">最近活動</h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="bg-green-100 rounded-full p-2">
-                <Check className="w-4 h-4 text-green-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">完成「碳足跡」測驗</p>
-                <p className="text-xs text-gray-500">獲得 50 點綠色積分</p>
-              </div>
-              <span className="text-xs text-gray-400">2小時前</span>
-            </div>
+      {/* QR Scanner Modal */}
+      {isScanning && (
+        <div className="fixed inset-0 bg-black z-50 flex flex-col">
+          {/* Header */}
+          <div className="bg-black text-white p-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">掃描 QR Code</h2>
+            <button
+              onClick={() => setIsScanning(false)}
+              className="p-2 hover:bg-white/20 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+          
+          {/* Scanner */}
+          <div className="flex-1 relative">
+            <QRCodeScanner onScan={handleQRCodeScan} />
             
-            <div className="flex items-center gap-3">
-              <div className="bg-amber-100 rounded-full p-2">
-                <Award className="w-4 h-4 text-amber-600" />
+            {/* Scanning frame overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div className="w-64 h-64 border-4 border-white rounded-2xl opacity-80">
+                  {/* Corner decorations */}
+                  <div className="absolute -top-1 -left-1 w-8 h-8 border-l-4 border-t-4 border-[hsl(var(--accent-500))] rounded-tl-lg"></div>
+                  <div className="absolute -top-1 -right-1 w-8 h-8 border-r-4 border-t-4 border-[hsl(var(--accent-500))] rounded-tr-lg"></div>
+                  <div className="absolute -bottom-1 -left-1 w-8 h-8 border-l-4 border-b-4 border-[hsl(var(--accent-500))] rounded-bl-lg"></div>
+                  <div className="absolute -bottom-1 -right-1 w-8 h-8 border-r-4 border-b-4 border-[hsl(var(--accent-500))] rounded-br-lg"></div>
+                </div>
+                <p className="text-white text-center mt-4 text-sm">
+                  將 QR Code 對準框內進行掃描
+                </p>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">解鎖「通勤環保達人」徽章</p>
-                <p className="text-xs text-gray-500">連續7天搭乘大眾運輸</p>
-              </div>
-              <span className="text-xs text-gray-400">昨天</span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {/* Success Toast */}
+      <SuccessToast 
+        show={showSuccess} 
+        onClose={() => setShowSuccess(false)} 
+      />
+    </>
   );
 }
