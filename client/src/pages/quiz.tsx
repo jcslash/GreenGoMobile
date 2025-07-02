@@ -52,6 +52,7 @@ export default function Quiz() {
     totalQuestions,
     startQuiz, 
     submitAnswer, 
+    nextQuestion,
     endQuiz 
   } = useQuiz();
 
@@ -84,6 +85,7 @@ export default function Quiz() {
         totalQuestions={totalQuestions}
         score={score}
         onAnswer={submitAnswer}
+        onNext={nextQuestion}
         onEnd={endQuiz}
       />
     );

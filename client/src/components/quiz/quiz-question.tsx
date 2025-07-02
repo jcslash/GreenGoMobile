@@ -7,8 +7,9 @@ interface QuizQuestionProps {
   questionIndex: number;
   totalQuestions: number;
   score: number;
-  onAnswer: (selectedAnswer: number) => Promise<void>;
+  onAnswer: (selectedAnswer: number) => Promise<any>;
   onEnd: () => void;
+  onNext?: () => void;
 }
 
 export function QuizQuestion({ 
@@ -17,7 +18,8 @@ export function QuizQuestion({
   totalQuestions, 
   score, 
   onAnswer, 
-  onEnd 
+  onEnd,
+  onNext 
 }: QuizQuestionProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,11 +31,36 @@ export function QuizQuestion({
     
     setIsSubmitting(true);
     try {
+      console.log("Submitting answer:", selectedAnswer, "for question:", question.id);
       const response = await onAnswer(selectedAnswer);
-      setResult(response as any);
-      setShowResult(true);
+      console.log("Got response:", response);
+      
+      if (response && typeof response === 'object') {
+        setResult({
+          correct: response.correct,
+          explanation: response.explanation,
+          points: response.points || 0
+        });
+        setShowResult(true);
+      } else {
+        console.error("Invalid response format:", response);
+        // 設置一個默認回應以便用戶可以繼續
+        setResult({
+          correct: false,
+          explanation: "提交成功，但回應格式異常",
+          points: 0
+        });
+        setShowResult(true);
+      }
     } catch (error) {
       console.error("Failed to submit answer:", error);
+      // 設置一個錯誤回應
+      setResult({
+        correct: false,
+        explanation: "提交答案時發生錯誤，請稍後再試",
+        points: 0
+      });
+      setShowResult(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -46,7 +73,11 @@ export function QuizQuestion({
       setSelectedAnswer(null);
       setShowResult(false);
       setResult(null);
-      // In a real implementation, this would trigger loading the next question
+      
+      // 觸發下一題的載入
+      if (onNext) {
+        onNext();
+      }
     }
   };
 
