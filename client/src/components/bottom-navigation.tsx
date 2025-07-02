@@ -22,10 +22,10 @@ export function BottomNavigation() {
               <div className={`flex-1 py-3 px-2 text-center transition-all duration-200 ${
                 isActive 
                   ? "text-[hsl(var(--primary-500))]" 
-                  : "text-gray-500 hover:bg-gray-50"
+                  : "text-gray-600 hover:bg-gray-50"
               }`}>
                 <Icon className="w-6 h-6 mx-auto mb-1" />
-                <span className="text-xs font-medium">{label}</span>
+                <span className={`text-xs font-medium ${isActive ? "font-semibold" : ""}`}>{label}</span>
               </div>
             </Link>
           );

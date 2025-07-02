@@ -138,7 +138,7 @@ export default function Home() {
               <h3 className="font-semibold text-gray-900 mb-2 text-center">
                 💡 {dailyTip.title}
               </h3>
-              <p className="text-sm text-gray-600 text-center leading-relaxed">
+              <p className="text-base text-gray-700 text-center leading-relaxed">
                 {dailyTip.content}
               </p>
             </div>
@@ -156,8 +156,8 @@ export default function Home() {
           >
             <QrCode className="w-7 h-7" />
             <div className="text-center">
-              <div className="text-lg">掃描 QR Code</div>
-              <div className="text-sm opacity-90">完成綠色打卡</div>
+              <div className="text-xl font-semibold">掃描 QR Code</div>
+              <div className="text-base opacity-90">完成綠色打卡</div>
             </div>
           </button>
         </div>

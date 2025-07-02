@@ -103,9 +103,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/progress/current", async (req, res) => {
     try {
       const progress = await storage.getUserProgress(1); // Default user
-      res.json(progress);
+      res.json(progress || []);
     } catch (error) {
-      res.status(500).json({ message: "Failed to get current user progress" });
+      console.error("Error getting user progress:", error);
+      res.json([]); // Return empty array instead of error
     }
   });
 

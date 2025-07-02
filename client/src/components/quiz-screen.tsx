@@ -111,7 +111,7 @@ export function QuizScreen() {
 
       {/* Question Card */}
       <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-6 leading-relaxed">
+        <h2 className="text-xl font-bold text-gray-900 mb-6 leading-relaxed">
           {currentQuestion.question}
         </h2>
 
@@ -157,7 +157,7 @@ export function QuizScreen() {
                       <XCircle className="w-4 h-4 text-white" />
                     )}
                   </div>
-                  <span>{option}</span>
+                  <span className="text-base">{option}</span>
                 </div>
               </button>
             );
