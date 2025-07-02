@@ -25,8 +25,8 @@ The application follows a monorepo structure with clear separation between clien
 
 ### Backend Architecture
 - **Express.js Server**: RESTful API with middleware for logging and error handling
-- **Database Layer**: Drizzle ORM with PostgreSQL using Neon serverless database
-- **Storage Interface**: Abstract storage layer for data operations
+- **Database Layer**: PostgreSQL with Drizzle ORM using Neon serverless database
+- **Storage Interface**: DatabaseStorage implementation for all data operations
 - **Session Management**: Express session handling with PostgreSQL store
 
 ### Data Models
@@ -81,8 +81,11 @@ The application uses a mobile container design pattern to simulate a native mobi
 
 ## Changelog
 
-Changelog:
-- July 02, 2025. Initial setup
+- July 02, 2025 - Initial setup with React-based mobile web application
+- July 02, 2025 - Integrated PostgreSQL database with Drizzle ORM
+- July 02, 2025 - Migrated from in-memory storage to persistent database storage
+- July 02, 2025 - Added comprehensive QR code scanning functionality with real camera access
+- July 02, 2025 - Enhanced home screen with sustainable island SVG and gamification features
 
 ## User Preferences
 
